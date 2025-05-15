@@ -3,6 +3,7 @@ const morgan = require('morgan'); // for logging requests
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const blogRoute = require('./route/blog');
 
 const app = express();
 
@@ -20,9 +21,10 @@ app.use(cors());
 app.use(morgan('dev'));
 
 //route
-app.get("*", (req, res) => {
-  res.json({ data: "message from server" });
-});
+// app.get("*", (req, res) => {
+//   res.json({ data: "message from server" });
+// });
+app.use('/api', blogRoute);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
