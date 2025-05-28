@@ -1,9 +1,9 @@
 
 function App() {
   return (
-    <div className="container">
+    <div className="container p-5">
       <h1>MERN STACK | Workshop</h1>
-      <button className="btn btn-primary">Bootstrap</button>
+      <a className="btn btn-primary" href="/create">New Topic</a>
     </div>
   );
 }
