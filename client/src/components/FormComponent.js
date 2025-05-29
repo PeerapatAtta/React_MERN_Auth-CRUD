@@ -1,4 +1,5 @@
 import { useState } from "react";
+import NavbarComponent from "./NavbarComponent";
 
 const FormComponent = () => {
     const [state, setState] = useState({
@@ -19,6 +20,7 @@ const FormComponent = () => {
 
     return (
         <div className="container p-5">
+            <NavbarComponent />
             <h1>New Topic</h1>
             {JSON.stringify(state)}
             <br />
@@ -41,8 +43,7 @@ const FormComponent = () => {
                     <input type="text" className="form-control" value={author} onChange={inputValue("author")} />
                 </div>
                 <br />
-                <input type="submit" value="Save" className="btn btn-primary" />
-                <a href="/" className="btn btn-success ms-2">Home</a>
+                <input type="submit" value="Save" className="btn btn-primary" />                
             </form>
         </div>
     );
