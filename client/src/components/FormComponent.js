@@ -17,14 +17,20 @@ const FormComponent = () => {
             [name]: event.target.value
         });
     }
+    // ฟังก์ชันสำหรับจัดการการส่งฟอร์ม
+    const submitForm = (e) => {
+        e.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
+        console.table({title,content,author}); // แสดงค่าใน console
+ 
+    }
 
     return (
         <div className="container p-5">
             <NavbarComponent />
             <h1>New Topic</h1>
-            {JSON.stringify(state)}
+            {/* {JSON.stringify(state)} */}
             <br />
-            <form >
+            <form onSubmit={submitForm}>
                 <div className="form-group">
                     <label className="form-label">Title</label>
                     <input type="text"
@@ -43,7 +49,7 @@ const FormComponent = () => {
                     <input type="text" className="form-control" value={author} onChange={inputValue("author")} />
                 </div>
                 <br />
-                <input type="submit" value="Save" className="btn btn-primary" />                
+                <input type="submit" value="Save" className="btn btn-primary" />
             </form>
         </div>
     );
