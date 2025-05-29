@@ -2,26 +2,27 @@ import { useState } from "react";
 import NavbarComponent from "./NavbarComponent";
 
 const FormComponent = () => {
+    // กำหนดค่าเริ่มต้นให้กับ state
     const [state, setState] = useState({
         title: "",
         content: "",
         author: ""
     });
     const { title, content, author } = state;
+
     // กำหนดค่าให้กับ state เมื่อมีการเปลี่ยนแปลงใน input
     const inputValue = name => event => {
-        console.log(name, "=", event.target.value);
-        // ใช้ setState เพื่ออัพเดตค่าใน state
         setState({
             ...state,
-            [name]: event.target.value
+            [name]: event.target.value // อัพเดตค่าใน state ตามชื่อของ input
         });
     }
+
     // ฟังก์ชันสำหรับจัดการการส่งฟอร์ม
     const submitForm = (e) => {
         e.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
-        console.table({title,content,author}); // แสดงค่าใน console
- 
+        console.table({ title, content, author }); // แสดงค่าใน console
+        console.log("API URL = ", process.env.REACT_APP_API);
     }
 
     return (
