@@ -1,5 +1,7 @@
 import { useState } from "react";
 import NavbarComponent from "./NavbarComponent";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const FormComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
@@ -21,8 +23,25 @@ const FormComponent = () => {
     // ฟังก์ชันสำหรับจัดการการส่งฟอร์ม
     const submitForm = (e) => {
         e.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
-        console.table({ title, content, author }); // แสดงค่าใน console
+        // console.table({ title, content, author }); // แสดงค่าใน console
         console.log("API URL = ", process.env.REACT_APP_API);
+        axios.post(`${process.env.REACT_APP_API}/create`, {
+            title,
+            content,
+            author
+        })
+            .then(reponse => {
+                // alert("Topic created successfully!");
+                Swal.fire({
+                    title: "Good job!",
+                    text: "You clicked the button!",
+                    icon: "success"
+                });
+            })
+            .catch(error => {
+                console.error("There was an error creating the topic!", error);
+                alert(error.reponse.data.error);
+            });
     }
 
     return (
