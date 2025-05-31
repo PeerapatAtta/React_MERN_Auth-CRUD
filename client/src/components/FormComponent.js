@@ -33,14 +33,24 @@ const FormComponent = () => {
             .then(reponse => {
                 // alert("Topic created successfully!");
                 Swal.fire({
-                    title: "Good job!",
-                    text: "You clicked the button!",
+                    title: "Alert",
+                    text: "Topic created successfully!",
                     icon: "success"
                 });
+                // รีเซ็ตค่าใน state หลังจากส่งข้อมูลสำเร็จ
+                setState({
+                    title: "",
+                    content: "",
+                    author: ""
+                });
             })
-            .catch(error => {
-                console.error("There was an error creating the topic!", error);
-                alert(error.reponse.data.error);
+            .catch(err => {
+                // alert(err.reponse.data.error);
+                Swal.fire({
+                    title: "Alert",
+                    text: err.response?.data?.error || "An error occurred",
+                    icon: "error"
+                });
             });
     }
 
@@ -48,8 +58,6 @@ const FormComponent = () => {
         <div className="container p-5">
             <NavbarComponent />
             <h1>New Topic</h1>
-            {/* {JSON.stringify(state)} */}
-            <br />
             <form onSubmit={submitForm}>
                 <div className="form-group">
                     <label className="form-label">Title</label>
