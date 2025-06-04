@@ -21,7 +21,15 @@ function App() {
   return (
     <div className="container p-5">
       <NavbarComponent />
-      {JSON.stringify(blogs)}
+      {blogs.map((blog,index)=>(
+        <div key={index} className="card mb-3">
+          <div className="card-body">
+            <h2 className="card-title">{blog.title}</h2>
+            <p className="card-text">{blog.content}</p>
+            <p className="card-text"><small className="text-muted">Author: {blog.author}, publish: {blog.createdAt}</small></p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
