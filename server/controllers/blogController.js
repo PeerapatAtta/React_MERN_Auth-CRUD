@@ -25,6 +25,16 @@ exports.create = (req, res) => {
     })
 }
 
+// ส่วนที่ 3: ฟังก์ชัน getAllblogs
+exports.getAllblogs = (req, res) => {
+    Blogs.find({}).exec((err, blogs) => {
+        if (err) {
+            return res.status(400).json({ error: "ไม่พบข้อมูลบล็อก" })
+        }
+        res.json(blogs)
+    })
+}
+
 
 
 
