@@ -25,8 +25,8 @@ function App() {
         <div key={index} className="card mb-3">
           <div className="card-body">
             <h2 className="card-title">{blog.title}</h2>
-            <p className="card-text">{blog.content}</p>
-            <p className="card-text"><small className="text-muted">Author: {blog.author}, publish: {blog.createdAt}</small></p>
+            <p className="card-text">{blog.content.substring(0,250)}</p>
+            <p className="card-text"><small className="text-muted">Author: {blog.author}, publish: {new Date(blog.createdAt).toLocaleString()}</small></p>
           </div>
         </div>
       ))}
