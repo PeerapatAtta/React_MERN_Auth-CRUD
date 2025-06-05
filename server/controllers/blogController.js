@@ -35,6 +35,17 @@ exports.getAllblogs = (req, res) => {
     })
 }
 
+// ส่วนที่ 4: ฟังก์ชัน singleBlog
+exports.singleBlog = (req, res) => {
+    const {slug} = req.params
+    Blogs.findOne( {slug} ).exec((err, blog) => {
+        if (err || !blog) {
+            return res.status(400).json({ error: "ไม่พบข้อมูลบล็อก" })
+        }
+        res.json(blog)
+    })
+}
+
 
 
 
