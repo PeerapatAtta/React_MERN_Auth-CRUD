@@ -2,6 +2,7 @@ import NavbarComponent from "./components/NavbarComponent";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -19,6 +20,39 @@ function App() {
     fetchData();
   }, []);
 
+  const confirmDelete = (slug) => {
+    Swal
+      .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          deleteBlog(slug);
+        }
+      });
+  }
+
+  const deleteBlog = (slug) => {
+
+    axios
+      .delete(`${process.env.REACT_APP_API}/blog/${slug}`)
+      .then((response) => {
+        Swal.fire(
+          'Deleted!',
+          response.data.message,
+          'success'
+        );
+        fetchData(); // Refresh the blog list after deletion
+      })
+      .catch(err => alert(err));
+  }
+
   return (
     <div className="container p-5">
       <NavbarComponent />
@@ -30,6 +64,8 @@ function App() {
             </Link>
             <p className="card-text">{blog.content.substring(0, 250)}</p>
             <p className="card-text"><small className="text-muted">Author: {blog.author}, publish: {new Date(blog.createdAt).toLocaleString()}</small></p>
+            <Link className="btn ms-2 btn-outline-success" to={`/blog/edit/${blog.slug}`}>Update</Link>
+            <button className="btn ms-2 btn-outline-danger" onClick={() => confirmDelete(blog.slug)} >Delete</button>
           </div>
         </div>
       ))}
