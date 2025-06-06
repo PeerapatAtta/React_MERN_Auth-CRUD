@@ -2,11 +2,15 @@
 // ส่วนที่ 1: Import ไลบรารีและโมเดล
 const slugify = require('slugify'); //slugify: ใช้เปลี่ยน title ให้เป็น URL-friendly เช่น "My Blog Post" → "my-blog-post"
 const Blogs = require('../models/blogs'); // Blogs: คือโมเดลที่อ้างถึง collection ของบล็อกใน MongoDB (น่าจะถูกสร้างไว้ใน models/blogs.js)
+const { v4: uuidv4 } = require('uuid'); // uuidv4: ใช้สร้าง UUID (Universally Unique Identifier) สำหรับการระบุเอกลักษณ์ของบล็อก
+
 
 // ส่วนที่ 2: ฟังก์ชัน create
 exports.create = (req, res) => {
     const { title, content, author } = req.body
-    let slug = slugify(title)
+    let slug = slugify(title) // ใช้ slugify เพื่อสร้าง slug จาก title
+
+    if(!slug) slug = uuidv4(); // ถ้า slug ไม่ได้ถูกสร้างจาก title ให้ใช้ UUID แทน
 
     switch (true) {
         case !title:
