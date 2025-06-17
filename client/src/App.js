@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import parse from "html-react-parser";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -62,7 +63,7 @@ function App() {
             <Link to={`/blog/${blog.slug}`} className="text-decoration-none text-dark">
               <h2 className="card-title">{blog.title}</h2>
             </Link>
-            <p className="card-text">{blog.content.substring(0, 250)}</p>
+            <p className="card-text">{parse(blog.content.substring(0, 250))}</p>
             <p className="card-text"><small className="text-muted">Author: {blog.author}, publish: {new Date(blog.createdAt).toLocaleString()}</small></p>
             <Link className="btn ms-2 btn-outline-success" to={`/blog/edit/${blog.slug}`}>Update</Link>
             <button className="btn ms-2 btn-outline-danger" onClick={() => confirmDelete(blog.slug)} >Delete</button>
