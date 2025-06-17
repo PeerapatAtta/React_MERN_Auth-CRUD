@@ -1,0 +1,89 @@
+import NavbarComponent from "./NavbarComponent";
+import { useState } from "react";
+// import axios from "axios";
+// import Swal from "sweetalert2";
+
+const LoginComponent = () => {
+    // กำหนดค่าเริ่มต้นให้กับ state
+    const [state, setState] = useState({
+        username: "",
+        password: ""
+    });
+    const { username, password } = state;
+
+    // กำหนดค่าให้กับ state เมื่อมีการเปลี่ยนแปลงใน input
+    const inputValue = name => event => {
+        setState({
+            ...state,
+            [name]: event.target.value // อัพเดตค่าใน state ตามชื่อของ input
+        });
+    }
+
+    // ฟังก์ชันสำหรับจัดการการส่งฟอร์ม
+    const submitForm = (e) => {
+        e.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
+        console.table({ username, password }); // แสดงค่าใน console
+        console.log("API URL = ", process.env.REACT_APP_API); // แสดง URL ของ API ที่ใช้
+        // ส่งข้อมูลไปยัง API ด้วย axios
+        // axios
+        //     .post(`${process.env.REACT_APP_API}/create`, {
+        //         title: username,
+        //         author: password
+        //     })
+        //     .then(reponse => {
+        //         Swal.fire({
+        //             title: "Alert",
+        //             text: "Topic created successfully!",
+        //             icon: "success"
+        //         });
+        //         // รีเซ็ตค่าใน state หลังจากส่งข้อมูลสำเร็จ
+        //         setState({
+        //             username: "",
+        //             password: ""
+        //         });
+        //     })
+        //     .catch(err => {
+        //         // alert(err.reponse.data.error);
+        //         Swal.fire({
+        //             title: "Alert",
+        //             text: err.response?.data?.error || "An error occurred",
+        //             icon: "error"
+        //         });
+        //     });
+    }
+
+    // แสดงผล UI ของคอมโพเนนต์
+    // ใช้ JSX เพื่อสร้างฟอร์มสำหรับการล็อกอิน
+    return (
+        <div className="container p-5">
+            <NavbarComponent />
+            <h1>Login</h1>
+            <form onSubmit={submitForm}>
+
+                <div className="form-group">
+                    <label className="form-label">Username</label>
+                    <input type="text"
+                        className="form-control"
+                        placeholder="Enter username"
+                        value={username}
+                        onChange={inputValue("username")}
+                    />
+                </div>
+
+                <div className="form-group mt-3">
+                    <label className="form-label">Password</label>
+                    <input type="password"
+                        className="form-control"
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={inputValue("password")}
+                    />
+                </div>
+                <br />
+                <input type="submit" value="Login" className="btn btn-primary" />
+            </form>
+        </div>
+    );
+}
+
+export default LoginComponent;
