@@ -2,15 +2,18 @@ import { useState } from "react";
 import NavbarComponent from "./NavbarComponent";
 import axios from "axios";
 import Swal from "sweetalert2";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 const FormComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
     const [state, setState] = useState({
         title: "",
-        content: "",
         author: ""
     });
-    const { title, content, author } = state;
+    const { title, author } = state;
+
+    const [content, setContent] = useState(""); // แยก state สำหรับ content เนื่องจากใช้ ReactQuill
 
     // กำหนดค่าให้กับ state เมื่อมีการเปลี่ยนแปลงใน input
     const inputValue = name => event => {
@@ -18,6 +21,11 @@ const FormComponent = () => {
             ...state,
             [name]: event.target.value // อัพเดตค่าใน state ตามชื่อของ input
         });
+    }
+
+    // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงใน ReactQuill
+    const submitContent = (event) => {
+        setContent(event); // อัพเดตค่า content ใน state
     }
 
     // ฟังก์ชันสำหรับจัดการการส่งฟอร์ม
@@ -40,9 +48,10 @@ const FormComponent = () => {
                 // รีเซ็ตค่าใน state หลังจากส่งข้อมูลสำเร็จ
                 setState({
                     title: "",
-                    content: "",
                     author: ""
                 });
+                setContent(""); // รีเซ็ต content
+                // ล้างค่าใน input ของ ReactQuill
             })
             .catch(err => {
                 // alert(err.reponse.data.error);
@@ -59,6 +68,7 @@ const FormComponent = () => {
             <NavbarComponent />
             <h1>New Topic</h1>
             <form onSubmit={submitForm}>
+
                 <div className="form-group">
                     <label className="form-label">Title</label>
                     <input type="text"
@@ -68,10 +78,18 @@ const FormComponent = () => {
                         onChange={inputValue("title")}
                     />
                 </div>
+
                 <div className="form-group mt-3">
                     <label className="form-label">Content</label>
-                    <textarea className="form-control" value={content} placeholder="Enter content" onChange={inputValue("content")}></textarea>
+                    <ReactQuill
+                        value={content}
+                        onChange={submitContent}
+                        theme="snow"
+                        className="mb-3"
+                        placeholder="Write your content here..."
+                    />
                 </div>
+
                 <div className="form-group mt-3">
                     <label>Author</label>
                     <input type="text" className="form-control" value={author} onChange={inputValue("author")} />

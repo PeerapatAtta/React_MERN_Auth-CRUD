@@ -3,16 +3,25 @@ import NavbarComponent from "./NavbarComponent";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom"; // Import useParams
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 const EditComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
     const [state, setState] = useState({
         title: "",
-        content: "",
         author: "",
         slug: ""
     });
-    const { title, content, author } = state;   
+    const { title, author } = state;
+
+    // แยก state สำหรับ content เนื่องจากใช้ ReactQuill
+    const [content, setContent] = useState("");
+    // ฟังก์ชันสำหรับจัดการการเปลี่ยนแปลงใน ReactQuill
+    const submitContent = (event) => {
+        setContent(event); // อัพเดตค่า content ใน state
+    }
+
     const { slug } = useParams(); // Get slug param
 
     // ใช้ useEffect เพื่อดึงข้อมูลจาก API เมื่อคอมโพเนนต์ถูกเรนเดอร์
@@ -22,15 +31,44 @@ const EditComponent = () => {
             .then((response) => {
                 console.log(response.data);
                 const { title, content, author, slug } = response.data;
-                setState({
-                    title,
-                    content,
-                    author,
-                    slug
-                });                
+                setState({ title, content,author, slug }); // Set title, author, and slug in state               
+                setContent(content); // Set content for ReactQuill
             })
             .catch((error) => alert('Error fetching blog data:', error));
     }, [slug]);
+
+    // ฟังก์ชันสำหรับแสดงฟอร์มอัพเดต
+    const showUpdateForm = () => (
+        <form onSubmit={submitForm}>
+            <div className="form-group">
+                <label className="form-label">Title</label>
+                <input type="text"
+                    className="form-control"
+                    placeholder="Enter title"
+                    value={title}
+                    onChange={inputValue("title")}
+                />
+            </div>
+
+            <div className="form-group mt-3">
+                <label className="form-label">Content</label>
+                <ReactQuill
+                    value={content}
+                    onChange={submitContent}
+                    theme="snow"
+                    className="mb-3"
+                    placeholder="Write your content here..."
+                />
+            </div>
+
+            <div className="form-group mt-3">
+                <label>Author</label>
+                <input type="text" className="form-control" value={author} onChange={inputValue("author")} />
+            </div>
+            <br />
+            <input type="submit" value="Update" className="btn btn-primary" />
+        </form>
+    );
 
     // กำหนดค่าให้กับ state เมื่อมีการเปลี่ยนแปลงใน input
     const inputValue = name => event => {
@@ -42,27 +80,24 @@ const EditComponent = () => {
 
     // ฟังก์ชันสำหรับจัดการการส่งฟอร์ม
     const submitForm = (e) => {
-        e.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
-        // console.table({ title, content, author }); // แสดงค่าใน console
+        e.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ        
         console.log("API URL = ", process.env.REACT_APP_API);
-        axios.post(`${process.env.REACT_APP_API}/create`, {
-            title,
-            content,
-            author
-        })
+        axios
+            .put(`${process.env.REACT_APP_API}/blog/${slug}`, {
+                title,
+                content,
+                author
+            })
             .then(reponse => {
-                // alert("Topic created successfully!");
                 Swal.fire({
                     title: "Alert",
-                    text: "Topic created successfully!",
+                    text: "Topic update successfully!",
                     icon: "success"
                 });
-                // รีเซ็ตค่าใน state หลังจากส่งข้อมูลสำเร็จ
-                setState({
-                    title: "",
-                    content: "",
-                    author: ""
-                });
+
+                const { title, content, author, slug } = reponse.data;
+                setState({ title, author, slug }); // Update state with new values
+                setContent(content); // Update content for ReactQuill
             })
             .catch(err => {
                 // alert(err.reponse.data.error);
@@ -78,6 +113,7 @@ const EditComponent = () => {
         <div className="container p-5">
             <NavbarComponent />
             <h1>Update Topic</h1>
+            {showUpdateForm()}
 
         </div>
     );
