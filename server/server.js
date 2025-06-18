@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const blogRoute = require('./routes/blog');
+const authRoute = require('./routes/auth'); // Import auth route
 
 const app = express();
 
@@ -21,12 +22,9 @@ app.use(cors());
 app.use(morgan('dev'));
 
 //route
-// app.get("*", (req, res) => {
-//   res.json({ data: "message from server" });
-// });
 app.use('/api', blogRoute);
+app.use('/api', authRoute); // Use auth route
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
 
-//Test Git

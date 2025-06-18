@@ -1,7 +1,9 @@
 import NavbarComponent from "./NavbarComponent";
 import { useState } from "react";
-// import axios from "axios";
-// import Swal from "sweetalert2";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { authenticate } from "../services/authorize"; // นำเข้า authenticate 
+import { useNavigate } from "react-router-dom";
 
 const LoginComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
@@ -10,6 +12,7 @@ const LoginComponent = () => {
         password: ""
     });
     const { username, password } = state;
+    const navigate = useNavigate(); // ใช้ useNavigate แทน withRouter
 
     // กำหนดค่าให้กับ state เมื่อมีการเปลี่ยนแปลงใน input
     const inputValue = name => event => {
@@ -25,31 +28,21 @@ const LoginComponent = () => {
         console.table({ username, password }); // แสดงค่าใน console
         console.log("API URL = ", process.env.REACT_APP_API); // แสดง URL ของ API ที่ใช้
         // ส่งข้อมูลไปยัง API ด้วย axios
-        // axios
-        //     .post(`${process.env.REACT_APP_API}/create`, {
-        //         title: username,
-        //         author: password
-        //     })
-        //     .then(reponse => {
-        //         Swal.fire({
-        //             title: "Alert",
-        //             text: "Topic created successfully!",
-        //             icon: "success"
-        //         });
-        //         // รีเซ็ตค่าใน state หลังจากส่งข้อมูลสำเร็จ
-        //         setState({
-        //             username: "",
-        //             password: ""
-        //         });
-        //     })
-        //     .catch(err => {
-        //         // alert(err.reponse.data.error);
-        //         Swal.fire({
-        //             title: "Alert",
-        //             text: err.response?.data?.error || "An error occurred",
-        //             icon: "error"
-        //         });
-        //     });
+        axios
+            .post(`${process.env.REACT_APP_API}/login`, { username, password })
+            .then(response => {
+                // console.log(response); // แสดงข้อมูลที่ได้รับจาก API
+                // ใช้ฟังก์ชัน authenticate เพื่อเก็บ token และ username ใน sessionStorage
+                authenticate(response, () => navigate("/")); // เปลี่ยนเส้นทางไปยังหน้าแรกหลังจากล็อกอินสำเร็จ
+            })
+            .catch(err => {
+                console.log(err.response); // แสดงข้อผิดพลาดใน console
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: err.response.data.error || 'Something went wrong!'
+                });
+            });
     }
 
     // แสดงผล UI ของคอมโพเนนต์
