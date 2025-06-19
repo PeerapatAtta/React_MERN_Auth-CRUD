@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import parse from "html-react-parser";
+import { getUser } from "./services/authorize"; // Need to check user authentication
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -65,8 +66,15 @@ function App() {
             </Link>
             <p className="card-text">{parse(blog.content.substring(0, 250))}</p>
             <p className="card-text"><small className="text-muted">Author: {blog.author}, publish: {new Date(blog.createdAt).toLocaleString()}</small></p>
-            <Link className="btn ms-2 btn-outline-success" to={`/blog/edit/${blog.slug}`}>Update</Link>
-            <button className="btn ms-2 btn-outline-danger" onClick={() => confirmDelete(blog.slug)} >Delete</button>
+
+            {getUser() && (
+              <div>
+                <Link className="btn ms-2 btn-outline-success" to={`/blog/edit/${blog.slug}`}>Update</Link>
+                <button className="btn ms-2 btn-outline-danger" onClick={() => confirmDelete(blog.slug)} >Delete</button>
+              </div>
+            )}
+
+
           </div>
         </div>
       ))}

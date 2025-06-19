@@ -10,9 +10,6 @@ const NavbarComponent = ({ history }) => {
                 <li className="nav-item pr-3 pt-3 pb-3">
                     <a className="nav-link" href="/">Home</a>
                 </li>
-                <li className="nav-item pr-3 pt-3 pb-3">
-                    <a className="nav-link" href="/create">NewTopic</a>
-                </li>
 
                 {
                     !getUser() && (
@@ -22,6 +19,12 @@ const NavbarComponent = ({ history }) => {
                     )
                 }
                 {
+                    getUser() && (
+                        <li className="nav-item pr-3 pt-3 pb-3">
+                            <Link to="/create" className="nav-link">NewTopic</Link>
+                        </li>
+                    )
+                }                {
                     getUser() && (
                         <li className="nav-item pr-3 pt-3 pb-3">
                             <button className="nav-link" onClick={() => logout(() => navigate("/"))}>Logout</button>

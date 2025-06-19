@@ -1,9 +1,10 @@
 import NavbarComponent from "./NavbarComponent";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { authenticate } from "../services/authorize"; // นำเข้า authenticate 
 import { useNavigate } from "react-router-dom";
+import { getUser } from "../services/authorize";
 
 const LoginComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
@@ -44,6 +45,13 @@ const LoginComponent = () => {
                 });
             });
     }
+
+    // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่แล้วหรือไม่
+    useEffect(() => {
+        if (getUser()) {
+            navigate("/"); // ถ้าผู้ใช้ล็อกอินอยู่แล้ว ให้เปลี่ยนเส้นทางไปยังหน้าแรก
+        }
+    }, [navigate]);
 
     // แสดงผล UI ของคอมโพเนนต์
     // ใช้ JSX เพื่อสร้างฟอร์มสำหรับการล็อกอิน

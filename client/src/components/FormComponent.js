@@ -4,12 +4,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
+import { getUser } from "../services/authorize"; // นำเข้า getUser เพื่อตรวจสอบสถานะการล็อกอินของผู้ใช้
 
 const FormComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
     const [state, setState] = useState({
         title: "",
-        author: ""
+        author: getUser()
     });
     const { title, author } = state;
 

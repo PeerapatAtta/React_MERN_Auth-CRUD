@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const expressJWT = require('express-jwt');
 
 exports.login = (req, res) => {
 
@@ -19,3 +20,10 @@ exports.login = (req, res) => {
         return res.status(401).json({ error: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
     }
 }
+
+// Middleware สำหรับตรวจสอบ JWT token
+exports.requireSignin = expressJWT({
+    secret: process.env.JWT_SECRET,
+    algorithms: ['HS256'],
+    userProperty: 'auth' // กำหนดให้ข้อมูลผู้ใช้ที่ถูกตรวจสอบจะถูกเก็บไว้ใน req.auth
+});
