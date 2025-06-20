@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const expressJWT = require('express-jwt');
+const { expressjwt: expressJWT } = require("express-jwt");
 
 exports.login = (req, res) => {
 
@@ -22,7 +22,7 @@ exports.login = (req, res) => {
 }
 
 // Middleware สำหรับตรวจสอบ JWT token
-exports.requireSignin = expressJWT({
+exports.requireLogin = expressJWT({
     secret: process.env.JWT_SECRET,
     algorithms: ['HS256'],
     userProperty: 'auth' // กำหนดให้ข้อมูลผู้ใช้ที่ถูกตรวจสอบจะถูกเก็บไว้ใน req.auth

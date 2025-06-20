@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import parse from "html-react-parser";
-import { getUser } from "./services/authorize"; // Need to check user authentication
+import { getUser, getToken } from "./services/authorize"; // Need to check user authentication
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -43,7 +43,13 @@ function App() {
   const deleteBlog = (slug) => {
 
     axios
-      .delete(`${process.env.REACT_APP_API}/blog/${slug}`)
+      .delete(`${process.env.REACT_APP_API}/blog/${slug}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}` // ส่ง token สำหรับการยืนยันตัวตน
+          }
+        }
+      )
       .then((response) => {
         Swal.fire(
           'Deleted!',

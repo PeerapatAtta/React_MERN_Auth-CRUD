@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { useParams } from "react-router-dom"; // Import useParams
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
+import { getToken } from "../services/authorize"; // นำเข้า getUser เพื่อตรวจสอบสถานะการล็อกอินของผู้ใช้
 
 const EditComponent = () => {
     // กำหนดค่าเริ่มต้นให้กับ state
@@ -31,7 +32,7 @@ const EditComponent = () => {
             .then((response) => {
                 console.log(response.data);
                 const { title, content, author, slug } = response.data;
-                setState({ title, content,author, slug }); // Set title, author, and slug in state               
+                setState({ title, content, author, slug }); // Set title, author, and slug in state               
                 setContent(content); // Set content for ReactQuill
             })
             .catch((error) => alert('Error fetching blog data:', error));
@@ -87,6 +88,11 @@ const EditComponent = () => {
                 title,
                 content,
                 author
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}` // ส่ง token สำหรับการยืนยันตัวตน
+                }
             })
             .then(reponse => {
                 Swal.fire({
